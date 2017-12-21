@@ -11,16 +11,21 @@ const roleHarvester = {
     } else {
       const targets = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
-          return (structure.structureType === STRUCTURE_EXTENSION ||
+          return (
+            structure.structureType === STRUCTURE_EXTENSION ||
             structure.structureType === STRUCTURE_SPAWN ||
-            structure.structureType === STRUCTURE_CONTAINER ||
-            structure.structureType === STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+            structure.structureType === STRUCTURE_TOWER ||
+            structure.structureType === STRUCTURE_CONTAINER
+          ) && (structure.energy < structure.energyCapacity || _.sum(structure.store) < structure.storeCapacity);
         },
       });
       if (targets.length > 0) {
+        // console.log(targets[0].structureType);
         if (creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
         }
+      } else {
+        console.log('No empty structures found for Harvester to desposit energy');
       }
     }
   },
@@ -29,24 +34,6 @@ const roleHarvester = {
 module.exports = roleHarvester;
 
 /**
-const containers = creep.pos.findInRange(FIND_STRUCTURES, 1,
-      {filter: {structureType: STRUCTURE_CONTAINER}});
-containers[0].transfer(creep, RESOURCE_ENERGY);
-
-
-const containersWithEnergy = room.find(FIND_STRUCTURES, {
-    filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
-                   i.store[RESOURCE_ENERGY] > 0
-});const total = _.sum(container.store);
-
-
-const target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-if(target) {
-    if(creep.pickup(target) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(target);
-    }
-}
-
 const pos = Game.rooms.sim.getPositionAt(5,12);
 const source = pos.findClosestByRange(FIND_SOURCES_ACTIVE);
  */

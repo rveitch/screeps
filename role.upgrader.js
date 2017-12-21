@@ -21,7 +21,7 @@ const roleUpgrader = {
       const harvestSourceB = creep.harvest(sources[1]);
 
       if (harvestSourceA === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffaa00' } });
+        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
       }
 
       /* if(harvestSourceA !== ERR_INVALID_TARGET) {

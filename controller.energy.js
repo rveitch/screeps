@@ -1,5 +1,14 @@
 const energyController = {
 
+  getRoomEnergyInfo(Game) {
+    const currentRoom = Game.spawns['Spawn1'].room;
+    const roomEnergyInfo = {
+      sourceEnergy: energyController.getSourceEnergyInfo(currentRoom),
+      containerEnergy: energyController.getContainerEnergyInfo(currentRoom),
+    };
+    return roomEnergyInfo;
+  },
+
   getSourceEnergyInfo(room) {
     const energySources = room.find(FIND_SOURCES);
     const energyAvailable = room.energyAvailable;

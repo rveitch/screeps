@@ -1,11 +1,13 @@
 const infoLogging = {
 
-  run(Game, Memory) {
+  wastedEnergy(Game, Memory) {
     const currentRoom = Game.spawns['Spawn1'].room;
     const energySources = currentRoom.find(FIND_SOURCES);
-    const energyAvailable = currentRoom.energyAvailable;
-    const energyCapacity = currentRoom.energyCapacityAvailable;
-    // console.log('Energy:', `${energyAvailable}/${energyCapacity}`);
+    _.forEach(energySources, function(source, index) {
+      if (source.ticksToRegeneration === 0) {
+        console.log(`Source ${index} regenerated with ${source.energy}/${source.energyCapacity} energy left unharvested.`)
+      }
+    });
   },
 
 };

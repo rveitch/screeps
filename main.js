@@ -2,6 +2,7 @@ const rolesHandler = require('controller.roles');
 const spawnController = require('controller.spawn');
 const memoryController = require('controller.memory');
 const towerController = require('controller.towers');
+const logging = require('controller.logging');
 
 module.exports.loop = function () {
   const config = {
@@ -29,4 +30,5 @@ module.exports.loop = function () {
   spawnController.run(Game, Memory, config);
   rolesHandler.run(Game, Memory);
   towerController.run(Game, Memory);
+  logging.wastedEnergy(Game, Memory);
 }

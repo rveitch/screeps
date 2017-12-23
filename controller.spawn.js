@@ -19,7 +19,7 @@ const spawnController = {
 
     if (upgraders.length < creepRole.upgraders.population) {
       const creepName = `Upgrader_${Game.time}`;
-      //console.log('Spawning new upgrader: ' + creepName);
+      //console.log('Spawning new upgrader: ' + creepName, creepBody);
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'upgrader' } });
     }
 
@@ -53,6 +53,7 @@ const spawnController = {
   getBodyParts(Game) {
     const roomEnergy = energyController.getRoomEnergyInfo(Game);
     const energyCapacity = roomEnergy.sourceEnergy.energyCapacity;
+    // console.log(roomEnergy, energyCapacity);
 
     if (energyCapacity <= 300) {
       return [WORK,WORK,CARRY,MOVE];
@@ -64,6 +65,10 @@ const spawnController = {
 
     if (energyCapacity <= 550) {
       return [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE];
+    }
+
+    if (energyCapacity <= 600 || energyCapacity <= 650 || energyCapacity >= 650) {
+      return [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE];
     }
 
   },

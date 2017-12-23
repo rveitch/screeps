@@ -8,11 +8,11 @@ module.exports.loop = function () {
   const config = {
     roles: {
       harvesters: {
-        population: 1,
-        preferSource: 0,
+        population: 2,
+        preferSource: 1,
       },
       upgraders: {
-        population: 2,
+        population: 3,
         preferSource: 0,
       },
       builders: {
@@ -23,12 +23,16 @@ module.exports.loop = function () {
         population: 1,
         preferSource: 1,
       },
+      gatherers: {
+        population: 0,
+        preferSource: 1,
+      },
     }
   };
 
   memoryController.run(Game, Memory);
   spawnController.run(Game, Memory, config);
-  rolesHandler.run(Game, Memory);
+  rolesHandler.run(Game, Memory, config);
   towerController.run(Game, Memory);
   logging.wastedEnergy(Game, Memory);
 }

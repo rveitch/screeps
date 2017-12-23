@@ -1,5 +1,7 @@
 const roleBuilder = {
-  run(creep) {
+  run(creep, config) {
+    const preferSource = config.roles.builders.preferSource;
+
     // Switch to harvesting when out of energy
     if (creep.memory.building && creep.carry.energy === 0) {
       creep.memory.building = false;
@@ -19,17 +21,26 @@ const roleBuilder = {
         if (creep.build(targets[0]) === ERR_NOT_IN_RANGE) {
           creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
         }
+      } else {
+        if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ffffff' } });
+        }
       }
     }
 
     // Find and move to energy sources
     if (!creep.memory.building) {
       const sources = creep.room.find(FIND_SOURCES);
-      // TODO: make a source find and balance model.
-      // Try FIND_SOURCES_ACTIVE to exclude empty sources.
-      // To be efficient, you have to mine 3000 energy every 300 ticks.
-      if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffaa00' } });
+      const droppedEnergy = creep.room.find(FIND_DROPPED_RESOURCES);
+
+      if (droppedEnergy.length) {
+        const droppedEnergySorted = _.sortBy(droppedEnergy, e => creep.pos.getRangeTo(e));
+        creep.moveTo(droppedEnergySorted[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+        creep.pickup(droppedEnergySorted[0]);
+      }
+
+      if (!droppedEnergy.length && creep.harvest(sources[preferSource]) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(sources[preferSource], { visualizePathStyle: { stroke: '#ffaa00' } });
       }
     }
   },

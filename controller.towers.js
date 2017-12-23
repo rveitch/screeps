@@ -8,6 +8,7 @@ const towerController = {
         filter: (structure) => structure.hits < structure.hitsMax,
       });
       if (closestDamagedStructure) {
+        cosole.log('Tower is repairing damaged structure.');
         tower.repair(closestDamagedStructure);
       }
 
@@ -15,6 +16,8 @@ const towerController = {
       const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
       if (closestHostile) {
         tower.attack(closestHostile);
+      } else {
+        console.log('No Hostiles');
       }
     }
   },

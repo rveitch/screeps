@@ -11,28 +11,29 @@ const spawnController = {
     const fixers = _.filter(Game.creeps, (creep) => creep.memory.role === 'fixer');
     // console.log(`Harvesters: ${harvesters.length}`, `Upgraders: ${upgraders.length}`, `Builders: ${builders.length}`, );
 
+    if (_.isEmpty(Game.creeps)) {
+      const creepName = `Harvester_${Game.time}`;
+      Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], creepName, { memory: { role: 'harvester' } });
+    }
+
     if (harvesters.length < creepRole.harvesters.population) {
       const creepName = `Harvester_${Game.time}`;
-      //console.log('Spawning new harvester: ' + creepName);
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'harvester' } });
+    }
+
+    if (fixers.length < creepRole.fixers.population) {
+      const creepName = `Fixer_${Game.time}`;
+      Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'fixer' } });
     }
 
     if (upgraders.length < creepRole.upgraders.population) {
       const creepName = `Upgrader_${Game.time}`;
-      //console.log('Spawning new upgrader: ' + creepName, creepBody);
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'upgrader' } });
     }
 
     if (builders.length < creepRole.builders.population) {
       const creepName = `Builder_${Game.time}`;
-      //console.log('Spawning new builder: ' + creepName);
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'builder' } });
-    }
-
-    if (fixers.length < creepRole.fixers.population) {
-      const creepName = `Fixer_${Game.time}`;
-      //console.log('Spawning new fixer: ' + creepName);
-      Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'fixer' } });
     }
 
     if (Game.spawns['Spawn1'].spawning) {
@@ -53,7 +54,6 @@ const spawnController = {
   getBodyParts(Game) {
     const roomEnergy = energyController.getRoomEnergyInfo(Game);
     const energyCapacity = roomEnergy.sourceEnergy.energyCapacity;
-    // console.log(roomEnergy, energyCapacity);
 
     if (energyCapacity <= 300) {
       return [WORK,WORK,CARRY,MOVE];

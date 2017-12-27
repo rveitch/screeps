@@ -1,40 +1,34 @@
 const towerController = {
 
   run(Game) {
-    const tower = Game.getObjectById('TOWER_ID');
-    if (tower) {
-      // Repair Towers
-      const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: (structure) => structure.hits < structure.hitsMax,
-      });
-      if (closestDamagedStructure) {
-        cosole.log('Tower is repairing damaged structure.');
-        tower.repair(closestDamagedStructure);
-      }
+    const currentRoomName = Game.spawns['Spawn1'].room.name;
+    var towers = Game.rooms[currentRoomName].find(
+      FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
-      // Attack hostile creeps with tower
-      const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-      if (closestHostile) {
-        tower.attack(closestHostile);
+    _.forEach(towers, function(tower, index) {
+      if (tower) {
+        // Repair Towers
+        const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+          filter: (structure) => structure.hits < structure.hitsMax,
+        });
+        if (closestDamagedStructure) {
+          console.log('Tower is repairing damaged structure.');
+          tower.repair(closestDamagedStructure);
+        }
+
+        // Attack hostile creeps with tower
+        const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if (closestHostile) {
+          tower.attack(closestHostile);
+        } else {
+          console.log('No Hostiles');
+        }
       } else {
-        console.log('No Hostiles');
+        console.log('No Tower');
       }
-    }
+    });
   },
 
 };
 
 module.exports = towerController;
-
-/*
-function defendRoom(roomName) {
-    var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
-    if(hostiles.length > 0) {
-        var username = hostiles[0].owner.username;
-        Game.notify(`User ${username} spotted in room ${roomName}`);
-        var towers = Game.rooms[roomName].find(
-            FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-        towers.forEach(tower => tower.attack(hostiles[0]));
-    }
-}
-*/

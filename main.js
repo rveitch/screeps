@@ -16,7 +16,7 @@ module.exports.loop = function () {
         preferSource: 0,
       },
       builders: {
-        population: 2,
+        population: 3,
         preferSource: 1,
       },
       fixers: {

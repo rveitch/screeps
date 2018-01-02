@@ -5,33 +5,41 @@ const spawnController = {
   run(Game, Memory, config) {
     const creepRole = config.roles;
     const creepBody = spawnController.getBodyParts(Game);
+    const allCreeps = _.filter(Game.creeps, (creep) => creep);
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
     const fixers = _.filter(Game.creeps, (creep) => creep.memory.role === 'fixer');
-    // console.log(`Harvesters: ${harvesters.length}`, `Upgraders: ${upgraders.length}`, `Builders: ${builders.length}`, );
+    const harvesterPopulationOptimal = harvesters.length >= creepRole.harvesters.population;
+    // console.log(`Harvesters: ${harvesters.length}\nUpgraders: ${upgraders.length}\nBuilders: ${builders.length}\nFilxers: ${fixers.length}`);
 
-    if (_.isEmpty(Game.creeps)) {
+    // Re-assign other roles if no Harvesters exist
+    if (!harvesterPopulationOptimal) {
+      if (builders.length >= 1) {
+        builders[0].memory.role = 'harvester';
+        console.log('Reassigning builder to harvester role.')
+      } else if (upgraders.length >= 1) {
+        upgraders[0].memory.role = 'harvester';
+        console.log('Reassigning upgrader to harvester role.')
+      } else if (upgraders.length >= 1) {
+        fixers[0].memory.role = 'harvester';
+        console.log('Reassigning fixer to harvester role.')
+      }
+    }
+
+    if (_.isEmpty(Game.creeps)) { // Fallback to restart production if all screep population is wiped out.
       const creepName = `Harvester_${Game.time}`;
       Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], creepName, { memory: { role: 'harvester' } });
-    }
-
-    if (harvesters.length < creepRole.harvesters.population) {
+    } else if (harvesters.length < creepRole.harvesters.population) {
       const creepName = `Harvester_${Game.time}`;
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'harvester' } });
-    }
-
-    if (fixers.length < creepRole.fixers.population) {
+    } else if (fixers.length < creepRole.fixers.population && harvesterPopulationOptimal) {
       const creepName = `Fixer_${Game.time}`;
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'fixer' } });
-    }
-
-    if (upgraders.length < creepRole.upgraders.population) {
+    } else if (upgraders.length < creepRole.upgraders.population && harvesterPopulationOptimal) {
       const creepName = `Upgrader_${Game.time}`;
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'upgrader' } });
-    }
-
-    if (builders.length < creepRole.builders.population) {
+    } else if (builders.length < creepRole.builders.population && harvesterPopulationOptimal) {
       const creepName = `Builder_${Game.time}`;
       Game.spawns['Spawn1'].spawnCreep(creepBody, creepName, { memory: { role: 'builder' } });
     }

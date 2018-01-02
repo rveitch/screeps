@@ -8,20 +8,20 @@ const towerController = {
     _.forEach(towers, function(tower, index) {
       if (tower) {
         // Repair Towers
-        const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+        /*const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
           filter: (structure) => structure.hits < structure.hitsMax,
         });
         if (closestDamagedStructure) {
           console.log('Tower is repairing damaged structure.');
           tower.repair(closestDamagedStructure);
-        }
+        }*/
 
         // Attack hostile creeps with tower
         const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {
           tower.attack(closestHostile);
         } else {
-          console.log('No Hostiles');
+          // console.log('No Hostiles');
         }
       } else {
         console.log('No Tower');
